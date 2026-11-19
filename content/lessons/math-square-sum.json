@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "id": "math-square-sum",
+  "title": "乘法公式：和的平方 (a+b)² 視覺探究",
+  "description": "從拼貼正方形面積出發，結合具體操作、同色雙重編碼與迷思對比，打破「(a+b)² = a² + b²」的經典錯誤。",
+  "subject": "數學",
+  "duration": 45,
+  "objectives": [
+    "能利用矩形分割面積理解 $(a+b)^2 = a^2 + 2ab + b^2$ 的幾何意義",
+    "能辨識並解釋為何 $(a+b)^2 \\neq a^2 + b^2$（少了兩塊 $ab$ 長方形）",
+    "能熟練運用和的平方公式進行整數巧算與多項式展開"
+  ],
+  "slides": [
+    {
+      "id": "recall-area",
+      "phase": "提取練習",
+      "eyebrow": "01 / 先備知識喚起",
+      "title": "邊長為 $a$ 與 $b$ 的矩形，面積怎麼表示？",
+      "body": "在切開大正方形前，先確認我們如何用代數符號記錄「長 × 寬」的面積。",
+      "visual": "cards",
+      "activity": {
+        "id": "sq-q1",
+        "type": "single",
+        "prompt": "若一個正方形的邊長是 $(3 + 4)$，它的面積應該是多少？",
+        "options": [
+          "$3^2 + 4^2 = 25$",
+          "$(3 + 4)^2 = 49$",
+          "$3 \\times 4 = 12$",
+          "$3^2 + 3 \\times 4 + 4^2 = 37$"
+        ],
+        "correct": [1],
+        "explanation": "邊長是 $3 + 4 = 7$，所以正方形面積是 $7 \\times 7 = 49$，並不是 $3^2 + 4^2 = 25$！"
+      }
+    },
+    {
+      "id": "predict-missing",
+      "phase": "預測",
+      "eyebrow": "02 / 誘發迷思：猜猜少了誰",
+      "title": "如果只算 $3^2 + 4^2 = 25$，離真正的 $49$ 還差了多少？",
+      "body": "49 和 25 中間差了 $24$，這多出來的 $24$ 面積跑到哪裡去了？先大膽預測看看！",
+      "activity": {
+        "id": "sq-q2",
+        "type": "single",
+        "prompt": "從 $(3 + 4)^2 = 49$ 與 $3^2 + 4^2 = 25$ 的差距 $24$，你猜是哪兩塊圖形湊出來的？",
+        "options": [
+          "一個邊長 $3 \\times 4$ 的長方形（面積 $12$）",
+          "兩個 $3 \\times 4$ 的長方形（$2 \\times 12 = 24$）",
+          "四個邊長 $2$ 的小正方形",
+          "算式算錯了，原本應該一樣大"
+        ],
+        "correct": [1],
+        "explanation": "差值 $24$ 剛好就是 $2 \\times (3 \\times 4)$，下一頁拖拉滑桿就會親眼看見這兩塊長方形！"
+      }
+    },
+    {
+      "id": "explore-square",
+      "phase": "具體操作",
+      "eyebrow": "03 / 拖拉滑桿切開圖形",
+      "title": "拖動邊長 $a$ 與 $b$：親眼看見四塊拼圖",
+      "body": "試著調整右側滑桿 $a$ 和 $b$，把邊長調整成「$a = 5$、$b = 2$」，觀察四個色塊的面積變化。",
+      "interactive": {
+        "caption": "和的平方幾何拼貼圖：大正方形由 a²、兩塊 ab 與 b² 四塊組成",
+        "view": { "xMin": -1.5, "xMax": 12.5, "yMin": -1.5, "yMax": 12.5, "grid": 1, "aspect": "equal" },
+        "params": [
+          { "id": "a", "label": "邊長 a", "min": 1, "max": 8, "step": 1, "value": 4 },
+          { "id": "b", "label": "邊長 b", "min": 1, "max": 4, "step": 1, "value": 2 }
+        ],
+        "shapes": [
+          { "type": "rect", "x": 0, "y": "b", "w": "a", "h": "a", "fill": "rgba(63,122,104,0.28)", "color": "#2B4A40" },
+          { "type": "rect", "x": "a", "y": "b", "w": "b", "h": "a", "fill": "rgba(75,126,150,0.28)", "color": "#4B7E96" },
+          { "type": "rect", "x": 0, "y": 0, "w": "a", "h": "b", "fill": "rgba(75,126,150,0.28)", "color": "#4B7E96" },
+          { "type": "rect", "x": "a", "y": 0, "w": "b", "h": "b", "fill": "rgba(217,107,67,0.32)", "color": "#D96B43" },
+          { "type": "text", "x": "a/2", "y": "b+a/2", "text": "$a^2 = {a*a}$", "color": "#1F352E", "size": 19 },
+          { "type": "text", "x": "a+b/2", "y": "b+a/2", "text": "$ab = {a*b}$", "color": "#2E5468", "size": 17 },
+          { "type": "text", "x": "a/2", "y": "b/2", "text": "$ab = {a*b}$", "color": "#2E5468", "size": 17 },
+          { "type": "text", "x": "a+b/2", "y": "b/2", "text": "$b^2 = {b*b}$", "color": "#A14320", "size": 17 },
+          { "type": "brace", "points": [[0, "a+b"], ["a", "a+b"]], "text": "a = {a}", "color": "#2B4A40" },
+          { "type": "brace", "points": [["a", "a+b"], ["a+b", "a+b"]], "text": "b = {b}", "color": "#D96B43" }
+        ],
+        "readouts": [
+          { "label": "總面積 (a+b)²", "expr": "(a+b)*(a+b)" },
+          { "label": "兩側漏掉的 2ab", "expr": "2*a*b" },
+          { "label": "總和 a² + 2ab + b²", "expr": "a*a + 2*a*b + b*b" }
+        ]
+      },
+      "activity": {
+        "id": "sq-q3",
+        "type": "manipulate",
+        "prompt": "請拖拉左側圖形的滑桿，調整為 $a = 5$、$b = 2$ 後送出你的操作狀態！",
+        "record": ["a", "b"],
+        "targetVars": { "a": 5, "b": 2 },
+        "tolerance": 0.1
+      }
+    },
+    {
+      "id": "dual-coding-steps",
+      "phase": "圖式連結",
+      "eyebrow": "04 / 雙重編碼：圖與式同色對應",
+      "title": "每一塊色塊，都在公式裡有一個位置",
+      "body": "透過乘法分配律逐步展開，會發現幾何圖形中的「4 塊面積」完全對應展開後的「4 個項」。",
+      "visual": "steps",
+      "bullets": [
+        "$(a+b)^2 = (a+b)(a+b)$",
+        "$= a(a+b) + b(a+b)$",
+        "$= \\color{#2B4A40}{a^2} + \\color{#4B7E96}{ab + ab} + \\color{#D96B43}{b^2}$",
+        "$= a^2 + 2ab + b^2$"
+      ],
+      "activity": {
+        "id": "sq-q4",
+        "type": "numeric",
+        "prompt": "請運用和的平方公式 $(a+b)^2 = a^2 + 2ab + b^2$ 計算下列兩題：",
+        "items": [
+          { "prompt": "$103^2 = (100 + 3)^2 =$", "answer": "10609" },
+          { "prompt": "$(2x + 5)^2$ 展開後的常數項是", "answer": "25" }
+        ]
+      }
+    },
+    {
+      "id": "make-challenge",
+      "phase": "半完成範例",
+      "eyebrow": "05 / 湊數思考挑戰",
+      "title": "用 4 張數字卡湊出目標面積 $25$",
+      "body": "這題考驗你能不能靈活利用括號與四則運算！把卡片組出 $(3+2) \\times (4+1)$ 或其他等價算式吧。",
+      "activity": {
+        "id": "sq-q5",
+        "type": "make",
+        "prompt": "請用下方 4 張數字卡（每張用一次）與加減乘除括號，湊出目標數 $25$：",
+        "cards": ["3", "2", "4", "1"],
+        "target": "25"
+      }
+    },
+    {
+      "id": "error-canvas",
+      "phase": "錯誤分析",
+      "eyebrow": "06 / 手寫或拍照紅筆批改",
+      "title": "小仁計算 $(2x + 3)^2 = 4x^2 + 9$，他哪裡漏掉了？",
+      "body": "請在畫布寫下正確展開算式，或在紙上畫出「$2x$ 與 $3$ 的四宮格面積圖」拍照上傳，AI 老師將用紅筆為你批改。",
+      "activity": {
+        "id": "sq-q6",
+        "type": "canvas",
+        "prompt": "請手寫或拍照寫出 $(2x + 3)^2$ 的正確展開步驟，並指出小仁算式少了哪一項（數值與理由）。",
+        "allowPhoto": true,
+        "aiAllowed": true,
+        "rubric": {
+          "criteria": [
+            {
+              "id": "expand",
+              "label": "正確寫出三項展開結果 $4x^2 + 12x + 9$",
+              "points": 3,
+              "levels": [
+                { "score": 3, "description": "完整且正確寫出 4x² + 12x + 9" },
+                { "score": 2, "description": "有算出中間項但係數誤算（如寫成 6x）" },
+                { "score": 1, "description": "僅正確算出平方項 4x² 與 9" },
+                { "score": 0, "description": "完全錯誤或未作答" }
+              ]
+            },
+            {
+              "id": "reason",
+              "label": "說明漏掉了「$2ab = 2 \\cdot (2x) \\cdot 3 = 12x$」",
+              "points": 2,
+              "levels": [
+                { "score": 2, "description": "明確指出少了 2ab（兩塊 2x × 3 的長方形）共 12x" },
+                { "score": 1, "description": "僅說明少了中間項但未寫出算式來源" },
+                { "score": 0, "description": "未解釋錯誤原因" }
+              ]
+            }
+          ],
+          "reference": "小仁漏掉了兩倍乘積項 $2ab = 2 \\times (2x) \\times 3 = 12x$，正確展開應為 $(2x)^2 + 2(2x)(3) + 3^2 = 4x^2 + 12x + 9$。"
+        }
+      }
+    },
+    {
+      "id": "quiz-round",
+      "phase": "交錯練習",
+      "eyebrow": "07 / 課後檢核與 PK",
+      "title": "即時檢核：挑戰換數字題組與雙人 PK",
+      "body": "進入課後檢核或 PK 配對，測試自己是否能穩穩拿下乘法公式！",
+      "quizPage": true
+    },
+    {
+      "id": "raid-boss",
+      "phase": "團隊對戰",
+      "eyebrow": "08 / 全班合作魔王戰",
+      "title": "全班集結！用「記憶・理解・應用・分析」打倒混沌魔王",
+      "body": "記憶題發動普攻、理解題存防護罩擋大招、應用題集氣放大招、分析題打破魔王護盾！",
+      "raidPage": true
+    }
+  ],
+  "quiz": {
+    "topics": [
+      {
+        "topic": "和的平方展開",
+        "objective": "熟練使用 (a+b)² = a² + 2ab + b² 展開二項式",
+        "performance": ["8-a-01", "a-IV-5"],
+        "variants": [
+          {
+            "stem": "展開 $(x + 6)^2$ 的結果為下列何者？",
+            "options": ["$x^2 + 12x + 36$", "$x^2 + 36$", "$x^2 + 6x + 36$", "$x^2 + 12x + 12$"],
+            "answer": 0,
+            "explanation": "$(x+6)^2 = x^2 + 2 \\cdot x \\cdot 6 + 6^2 = x^2 + 12x + 36$。"
+          },
+          {
+            "stem": "展開 $(3x + 2)^2$ 的結果為下列何者？",
+            "options": ["$9x^2 + 12x + 4$", "$9x^2 + 4$", "$3x^2 + 12x + 4$", "$9x^2 + 6x + 4$"],
+            "answer": 0,
+            "explanation": "$(3x)^2 + 2(3x)(2) + 2^2 = 9x^2 + 12x + 4$。"
+          }
+        ]
+      },
+      {
+        "topic": "整數平方巧算",
+        "objective": "運用和的平方公式快速計算大數平方",
+        "performance": ["8-a-01", "a-IV-5"],
+        "variants": [
+          {
+            "stem": "利用和的平方公式計算 $205^2$，其結果應為何？",
+            "options": ["$42025$", "$40025$", "$41025$", "$42250$"],
+            "answer": 0,
+            "explanation": "$(200 + 5)^2 = 40000 + 2000 + 25 = 42025$。"
+          },
+          {
+            "stem": "已知 $101^2 = 100^2 + k + 1^2$，請問 $k$ 的值是多少？",
+            "options": ["$200$", "$100$", "$101$", "$202$"],
+            "answer": 0,
+            "explanation": "中間項 $2ab = 2 \\times 100 \\times 1 = 200$。"
+          }
+        ]
+      }
+    ]
+  },
+  "raid": {
+    "section": "八上 1-1",
+    "title": "和的平方守護戰",
+    "pools": {
+      "attack": [
+        { "id": "atk-1", "kind": "attack", "stem": "$(a+b)^2$ 的展開式中，除了 $a^2$ 與 $b^2$ 之外，還包含哪一項？", "options": ["$+2ab$", "$+ab$", "$-2ab$", "$+2a^2b$"], "answer": 0 },
+        { "id": "atk-2", "kind": "attack", "stem": "計算 $(x + 5)^2$ 展開後的常數項是多少？", "options": ["$25$", "$10$", "$5$", "$50$"], "answer": 0 },
+        { "id": "atk-3", "kind": "attack", "stem": "計算 $(x + 4)^2$ 展開後，$x$ 項的係數是多少？", "options": ["$8$", "$4$", "$16$", "$2$"], "answer": 0 },
+        { "id": "atk-4", "kind": "attack", "stem": "若一個正方形邊長為 $a + b$，則其面積為？", "options": ["$(a+b)^2$", "$a^2+b^2$", "$4(a+b)$", "$2ab$"], "answer": 0 }
+      ],
+      "shield": [
+        { "id": "shd-1", "kind": "shield", "stem": "為何 $(3 + 5)^2$ 會大於 $3^2 + 5^2$？因為幾何圖形多了：", "options": ["兩塊 $3 \\times 5$ 的長方形", "一塊 $3 \\times 5$ 的長方形", "四個 $1 \\times 1$ 小正方形", "沒有多，兩者相等"], "answer": 0 },
+        { "id": "shd-2", "kind": "shield", "stem": "展開 $(2a + 3b)^2$ 時，第一項 $(2a)^2$ 等於多少？", "options": ["$4a^2$", "$2a^2$", "$4a$", "$2a^4$"], "answer": 0 },
+        { "id": "shd-3", "kind": "shield", "stem": "若 $a^2 + 2ab + b^2 = 100$，且 $a > 0, b > 0$，那麼 $a + b$ 等於多少？", "options": ["$10$", "$50$", "$20$", "$100$"], "answer": 0 }
+      ],
+      "ultimate": [
+        { "id": "ult-1", "kind": "ultimate", "stem": "利用乘法公式計算 $50.5^2$ 的值為何？", "options": ["$2550.25$", "$2500.25$", "$2525.25$", "$2600.25$"], "answer": 0 },
+        { "id": "ult-2", "kind": "ultimate", "stem": "已知 $a + b = 9$ 且 $ab = 14$，則 $a^2 + b^2$ 的值為多少？", "options": ["$53$", "$81$", "$67$", "$95$"], "answer": 0 },
+        { "id": "ult-3", "kind": "ultimate", "stem": "若 $(x + k)^2 = x^2 + 18x + 81$，則正數 $k$ 為何？", "options": ["$9$", "$18$", "$81$", "$6$"], "answer": 0 }
+      ],
+      "analysis": [
+        {
+          "id": "ana-1",
+          "kind": "analysis",
+          "stem": "大明主張：因為 $(-3 + 3)^2 = 0$ 且 $(-3)^2 + 3^2 = 18$，所以只要有數字相反就不會相等。請問下列判斷與理由何者正確？",
+          "options": ["大明的結論不完整，只有當 $a=0$ 或 $b=0$ 時 $(a+b)^2$ 才會等於 $a^2+b^2$", "大明說得對，任何正負數相加平方一定都比平方和小"],
+          "answer": 0,
+          "reason": [
+            "因為 $(a+b)^2 - (a^2+b^2) = 2ab$，只要 $ab \\neq 0$ 兩者就不相等",
+            "因為負數的平方還是正數，所以一定較大"
+          ],
+          "reasonAnswer": 0,
+          "hint": "把 $(a+b)^2$ 和 $a^2+b^2$ 相減，看看差值 $2ab$ 什麼時候會變成 $0$。"
+        },
+        {
+          "id": "ana-2",
+          "kind": "analysis",
+          "stem": "有一塊邊長 $x$ 公分的正方形草地，若長跟寬各向外擴建 $3$ 公分，新增的面積是多少？",
+          "options": ["$6x + 9$ 平方公分", "$9$ 平方公分"],
+          "answer": 0,
+          "reason": [
+            "新增面積 $= (x+3)^2 - x^2 = (x^2 + 6x + 9) - x^2 = 6x + 9$",
+            "因為只向外擴建 $3$ 公分，多出來的就是 $3^2 = 9$"
+          ],
+          "reasonAnswer": 0,
+          "hint": "畫出原來邊長 $x$ 的正方形，外圍會多出兩條長方形和角落一小塊正方形。"
+        }
+      ]
+    }
+  }
+}

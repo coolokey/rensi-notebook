@@ -1,0 +1,46 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rensi-notebook",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-12-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/raid/*", "/duel/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rensi-db",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "rensi-media"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CLASSROOM_HUB",
+        "class_name": "ClassroomHub"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["ClassroomHub"]
+    }
+  ],
+  "vars": {
+    "DEFAULT_TEACHER_ACCOUNT": "teacher@rensi.edu",
+    "DEFAULT_TEACHER_NAME": "游貿仁老師",
+    "SITE_NAME": "仁思手札"
+  }
+}

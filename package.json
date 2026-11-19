@@ -1,0 +1,23 @@
+{
+  "name": "rensi-notebook",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "仁思手札（Rensi Thinking Notebook）— 國中跨科互動課堂、即時 IRS 與 AI 評量規準系統",
+  "scripts": {
+    "lessons": "node scripts/validate-lessons.mjs",
+    "build:frontend": "node scripts/build-frontend.mjs",
+    "build": "npm run lessons && npm run build:frontend",
+    "typecheck": "tsc --noEmit",
+    "db:migrate:local": "npx wrangler d1 migrations apply rensi-db --local",
+    "db:migrate:remote": "npx wrangler d1 migrations apply rensi-db --remote",
+    "dev": "npm run build && npx wrangler dev --local",
+    "deploy": "npm run build && npx wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261118.1",
+    "katex": "^0.16.22",
+    "typescript": "^5.8.2",
+    "wrangler": "^4.165.0"
+  }
+}

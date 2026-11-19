@@ -1,0 +1,396 @@
+/* ==========================================================================
+   仁思手札（Rensi Thinking Notebook）— 日系清透紙感視覺主題覆寫層
+   淺鼠尾草綠 × 燕麥米白道林紙 × 暖陽赤陶印章 × 深松針灰綠
+   ========================================================================== */
+
+:root {
+  --ink: #243831;
+  --ink-2: #415b52;
+  --muted: #6f837b;
+  --line: #e2ddd2;
+  --paper: #f7f5f0;
+  --card: #fffefc;
+  --grid: #eae5da;
+  --accent: #d96b43;
+  --accent-ink: #a14320;
+  --violet: #3f7a68;
+  --blue: #4b7e96;
+  --teal: #2f8f83;
+  --yellow: #e5b454;
+  --green: #2b8a62;
+  --red: #c84b4b;
+  --radius: 14px;
+  --shadow: 0 4px 20px rgba(36, 56, 49, 0.06);
+}
+
+/* 赤陶「仁」字職人印章標誌 */
+.brand-mark {
+  background: var(--accent);
+  color: #faf8f4;
+  background-image: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(217, 107, 67, 0.28),
+    inset 0 0 0 2px rgba(250, 248, 244, 0.34);
+}
+.brand-mark .icon {
+  stroke-width: 2.35px;
+}
+.brand-name small {
+  color: var(--muted);
+  letter-spacing: 0.16em;
+}
+
+/* 登入頁：清透淺鼠尾草綠道林紙封面 × 燕麥米白登入區 */
+.landing {
+  background: #e3ece6;
+}
+.landing-art {
+  color: #1f352e;
+  background-color: #e3ece6;
+  background-image: linear-gradient(rgba(36, 56, 49, 0.065) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(36, 56, 49, 0.065) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.landing-brand .brand {
+  color: #1f352e;
+}
+.landing-brand .brand-name small {
+  color: #546f65;
+}
+.landing-brand .brand-mark {
+  background: #d96b43;
+  color: #faf8f4;
+}
+.landing-art h1 {
+  color: #1f352e;
+}
+.landing-art h1 span {
+  color: #c85630;
+  background: linear-gradient(180deg, transparent 64%, rgba(229, 180, 84, 0.36) 64%);
+  padding: 0 4px;
+  border-radius: 4px;
+}
+.landing-art p {
+  color: #415b52;
+}
+.hero-points li {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid #c8d9ce;
+  color: #243831;
+  box-shadow: 0 2px 8px rgba(36, 56, 49, 0.04);
+}
+.hero-points li .icon {
+  color: var(--accent);
+}
+
+.login-card {
+  background: var(--paper);
+  border-left: 1px solid #dce4de;
+}
+.segmented {
+  background: #e8e3d9;
+}
+.segmented button.selected {
+  color: #1f352e;
+  background: #fffefc;
+}
+
+/* 首頁形象人物手帳展示舞台 */
+.hero-graph {
+  width: 100%;
+  max-width: 440px;
+}
+.hero-mascot-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 34px 48px 22px;
+  border-radius: 22px;
+  background: rgba(255, 254, 252, 0.82);
+  border: 1.5px solid #cbd9cf;
+  box-shadow: 0 12px 30px rgba(36, 56, 49, 0.08);
+  background-image: linear-gradient(rgba(63, 122, 104, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(63, 122, 104, 0.07) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.hero-mascot-img {
+  position: relative;
+  z-index: 1;
+  height: clamp(186px, 26vh, 246px);
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(36, 56, 49, 0.16));
+  display: block;
+}
+.hero-note-tag {
+  position: absolute;
+  z-index: 2;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 11px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(36, 56, 49, 0.08);
+  white-space: nowrap;
+}
+.hero-note-tag.t-lit {
+  top: 10px;
+  right: 12px;
+  background: #fff4e8;
+  color: #a14320;
+  border: 1px solid #eec7b4;
+}
+.hero-note-tag.t-math {
+  bottom: 12px;
+  left: 12px;
+  background: #e9f3ee;
+  color: #243831;
+  border: 1px solid #c3d9cc;
+}
+.hero-note-tag.t-sci {
+  top: 10px;
+  left: 12px;
+  background: #eef4f7;
+  color: #345c70;
+  border: 1px solid #c9dce6;
+}
+.hero-seal-stamp {
+  position: absolute;
+  z-index: 2;
+  right: 12px;
+  bottom: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #d96b43;
+  color: #faf8f4;
+  font-weight: 900;
+  font-size: 15px;
+  display: grid;
+  place-items: center;
+  transform: rotate(-6deg);
+  box-shadow: 0 3px 10px rgba(217, 107, 67, 0.3),
+    inset 0 0 0 1.5px rgba(250, 248, 244, 0.45);
+}
+
+/* 側邊欄教師圓形頭像 */
+.sidebar {
+  background: #fcfbf8;
+}
+.nav-item:hover {
+  background: #eff3ee;
+}
+.nav-item.active {
+  background: #2b4a40;
+  color: #faf8f4;
+}
+.sidebar-user .avatar.avatar-img {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: #e8f0eb;
+  border: 2px solid #cbd9cf;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(36, 56, 49, 0.1);
+}
+.sidebar-user .avatar.avatar-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 學生課堂等候室與無題目提示區形象人物 */
+.waiting-mascot {
+  display: grid;
+  place-items: center;
+  margin: 0 auto 4px;
+}
+.waiting-mascot img {
+  height: clamp(140px, 23vh, 192px);
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(36, 56, 49, 0.15));
+}
+.quiet-mascot {
+  height: 128px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(36, 56, 49, 0.12));
+  margin-bottom: 4px;
+}
+
+/* 工作區、按鈕、標籤與課程卡片 */
+.workspace-top {
+  background: rgba(252, 251, 248, 0.94);
+}
+.btn.primary {
+  background: #2b4a40;
+  color: #faf8f4;
+}
+.btn.primary:hover:not(:disabled) {
+  background: #396053;
+}
+.btn.secondary {
+  background: #fffefc;
+  border-color: #dcd6c8;
+}
+.btn.secondary:hover:not(:disabled) {
+  background: #f1eee6;
+}
+.quiet:hover:not(:disabled),
+.icon-btn:hover:not(:disabled) {
+  background: #eeece4;
+}
+
+.course-thumb {
+  background: linear-gradient(145deg, #e2ece5 0%, #d3e3d9 100%);
+  background-image: linear-gradient(rgba(36, 56, 49, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(36, 56, 49, 0.055) 1px, transparent 1px),
+    linear-gradient(145deg, #e2ece5 0%, #d3e3d9 100%);
+  background-size: 16px 16px, 16px 16px, 100% 100%;
+  color: #1f352e;
+  border-bottom: 1px solid #cbdacf;
+}
+.course-thumb span {
+  color: #49665b;
+}
+.course-thumb strong {
+  color: #243831;
+}
+.course-thumb em {
+  color: #b5502b;
+  font-weight: 700;
+}
+.phase-strip i {
+  background: linear-gradient(90deg, #3f7a68, #639a88);
+}
+.phase-strip i:nth-child(3n) {
+  background: #d96b43;
+}
+.new-course-card {
+  background: rgba(255, 254, 252, 0.78);
+  border-color: #c5d3c9;
+}
+
+/* 標籤、選項、滑桿與回饋卡片 */
+.tag {
+  color: #365047;
+  background: #eaefe9;
+}
+.tag.green {
+  color: #1b6b4a;
+  background: #dcf2e6;
+}
+.tag.warn {
+  color: #8a5311;
+  background: #fcefd7;
+}
+.phase-chip {
+  color: #2b4a40;
+  background: #e3ece6;
+}
+.soft-notice {
+  background: #edf4f0;
+  border-color: #c7dbce;
+  color: #243831;
+}
+.soft-notice .icon {
+  color: #3f7a68;
+}
+
+.answer-option.chosen {
+  border-color: var(--violet);
+  background: #edf5f1;
+}
+.chosen .option-letter,
+.scale-option.chosen {
+  background: var(--violet);
+  border-color: var(--violet);
+  color: #fff;
+}
+.option-letter {
+  background: #eef0ea;
+}
+
+.grading-bar,
+.quiz-tools,
+.criteria-hint,
+.sketch-criteria {
+  background: #f0f5f2;
+  border-color: #d2e0d7;
+}
+.quiz-dot.done {
+  background: #e3ece6;
+  border-color: #b5ccc0;
+}
+.pk-pair,
+.pk-card.over {
+  border-color: #bdd2c5;
+}
+.pk-card {
+  background: #fafcfa;
+}
+
+.feedback-card {
+  background: #fdf8f6;
+  border-color: #ebc9c3;
+}
+.feedback-card header {
+  color: var(--red);
+}
+.redpen-text {
+  fill: var(--red);
+}
+
+.slide-dots .has-q span {
+  background: #9bc4b3;
+}
+.slide-dots .active span {
+  background: #2b4a40;
+}
+.slide-dots .live:not(.active) span {
+  box-shadow: 0 0 0 3px rgba(217, 107, 67, 0.45);
+}
+
+.textbook-fig button:after {
+  background: #2b4a40;
+}
+.anim-thumb {
+  background: #243831;
+  border-color: #243831;
+}
+.anim-thumb:after {
+  background: var(--accent);
+  color: #faf8f4;
+}
+
+.step-card > span {
+  background: #2b4a40;
+}
+.idea-card.tone-0 {
+  color: #2b4a40;
+  background: #e3ece6;
+}
+.idea-card.tone-1 {
+  color: #2c556b;
+  background: #e3eff4;
+}
+.idea-card.tone-2 {
+  color: #a14320;
+  background: #fbece5;
+}
+.idea-card.tone-3 {
+  color: #196b62;
+  background: #e0f3f0;
+}
+
+.danmaku-item {
+  background: rgba(36, 56, 49, 0.85);
+}
+.buzz-layer {
+  background: rgba(36, 56, 49, 0.56);
+}
+.class-code {
+  background: #eeece4;
+}

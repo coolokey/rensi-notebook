@@ -1,7 +1,7 @@
 export interface Env {
   ASSETS: Fetcher;
   DB: D1Database;
-  R2: R2Bucket;
+  R2?: R2Bucket;
   CLASSROOM_HUB: DurableObjectNamespace;
   DEFAULT_TEACHER_ACCOUNT: string;
   DEFAULT_TEACHER_NAME: string;

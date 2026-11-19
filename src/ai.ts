@@ -238,10 +238,17 @@ export async function gradeAnswerWithAi(
   // Live multimodal AI grading
   const images: Array<{ mime: string; base64: string }> = [];
   if (imageId && depth !== 'fast') {
-    const row = await env.DB.prepare('SELECT r2_key, content_type FROM images WHERE id = ?')
+    const row = await env.DB.prepare(
+      'SELECT r2_key, content_type, data_b64 FROM images WHERE id = ?'
+    )
       .bind(imageId)
-      .first<{ r2_key: string; content_type: string }>();
-    if (row) {
+      .first<{ r2_key: string; content_type: string; data_b64: string | null }>();
+    if (row?.data_b64) {
+      images.push({
+        mime: row.content_type || 'image/jpeg',
+        base64: row.data_b64,
+      });
+    } else if (row && env.R2) {
       const obj = await env.R2.get(row.r2_key);
       if (obj) {
         const buf = await obj.arrayBuffer();

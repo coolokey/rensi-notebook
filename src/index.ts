@@ -81,13 +81,39 @@ async function readJson<T = Record<string, unknown>>(request: Request): Promise<
   }
 }
 
-function parseDataUrl(dataUrl: string): { mime: string; bytes: Uint8Array } {
-  const m = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
-  if (!m) throw new Error('圖片資料格式不正確');
-  const bin = atob(m[2]);
+function base64ToBytes(b64: string): Uint8Array {
+  const bin = atob(b64);
   const bytes = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-  return { mime: m[1], bytes };
+  return bytes;
+}
+
+function parseDataUrl(dataUrl: string): { mime: string; b64: string; bytes: Uint8Array } {
+  const m = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
+  if (!m) throw new Error('圖片資料格式不正確');
+  const b64 = m[2];
+  if (b64.length > 1_800_000) throw new Error('作答圖片過大，請縮小後再試');
+  return { mime: m[1], b64, bytes: base64ToBytes(b64) };
+}
+
+async function serveStoredImage(
+  env: Env,
+  row: { r2_key: string; content_type: string; data_b64: string | null } | null,
+  cacheControl?: string
+): Promise<Response> {
+  if (!row) return err('找不到圖片', 404);
+  const headers: Record<string, string> = {
+    'Content-Type': row.content_type || 'image/jpeg',
+    ...(cacheControl ? { 'Cache-Control': cacheControl } : {}),
+  };
+  if (row.data_b64) {
+    return new Response(base64ToBytes(row.data_b64), { headers });
+  }
+  if (env.R2) {
+    const obj = await env.R2.get(row.r2_key);
+    if (obj) return new Response(obj.body, { headers });
+  }
+  return err('圖片不存在', 404);
 }
 
 async function getCurrentUser(request: Request, env: Env): Promise<User | null> {
@@ -862,16 +888,17 @@ async function handleApi(
     const sid = imgUploadMatch[1];
     const body = await readJson<{ dataUrl?: string }>(request);
     if (!body.dataUrl) return err('缺少圖片資料');
-    const { mime, bytes } = parseDataUrl(body.dataUrl);
-    if (bytes.byteLength > 3 * 1024 * 1024) return err('圖片超過 3 MB 上限');
+    const { mime, b64, bytes } = parseDataUrl(body.dataUrl);
 
     const imageId = `img-${crypto.randomUUID().slice(0, 12)}`;
     const r2Key = `sessions/${sid}/${imageId}`;
-    await env.R2.put(r2Key, bytes, { httpMetadata: { contentType: mime } });
+    if (env.R2) {
+      await env.R2.put(r2Key, bytes, { httpMetadata: { contentType: mime } });
+    }
     await env.DB.prepare(
-      'INSERT INTO images (id, session_id, seat, r2_key, content_type, size_bytes, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+      'INSERT INTO images (id, session_id, seat, r2_key, content_type, size_bytes, created_at, data_b64) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
     )
-      .bind(imageId, sid, user?.seat ?? null, r2Key, mime, bytes.byteLength, Date.now())
+      .bind(imageId, sid, user?.seat ?? null, r2Key, mime, bytes.byteLength, Date.now(), b64)
       .run();
 
     return json({ imageId });
@@ -1341,14 +1368,16 @@ async function handleApi(
     if (subPath === '/photos' && method === 'POST') {
       const body = await readJson<{ dataUrl?: string }>(request);
       if (!body.dataUrl) return err('缺少圖片');
-      const { mime, bytes } = parseDataUrl(body.dataUrl);
+      const { mime, b64, bytes } = parseDataUrl(body.dataUrl);
       const pid = `hwp-${crypto.randomUUID().slice(0, 10)}`;
       const r2Key = `homework/${hwId}/${seat}/${pid}`;
-      await env.R2.put(r2Key, bytes, { httpMetadata: { contentType: mime } });
+      if (env.R2) {
+        await env.R2.put(r2Key, bytes, { httpMetadata: { contentType: mime } });
+      }
       await env.DB.prepare(
-        'INSERT INTO images (id, homework_id, seat, r2_key, content_type, size_bytes, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+        'INSERT INTO images (id, homework_id, seat, r2_key, content_type, size_bytes, created_at, data_b64) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
       )
-        .bind(pid, hwId, seat, r2Key, mime, bytes.byteLength, Date.now())
+        .bind(pid, hwId, seat, r2Key, mime, bytes.byteLength, Date.now(), b64)
         .run();
       sheet.photos.push({ id: pid });
       await env.DB.prepare('UPDATE homework_sheets SET sheet_json = ? WHERE homework_id = ? AND seat = ?')
@@ -1358,13 +1387,12 @@ async function handleApi(
     }
     const photoGetMatch = /^\/photos\/([\w-]+)$/.exec(subPath || '');
     if (photoGetMatch && method === 'GET') {
-      const img = await env.DB.prepare('SELECT r2_key, content_type FROM images WHERE id = ?')
+      const img = await env.DB.prepare(
+        'SELECT r2_key, content_type, data_b64 FROM images WHERE id = ?'
+      )
         .bind(photoGetMatch[1])
-        .first<{ r2_key: string; content_type: string }>();
-      if (!img) return err('找不到圖片', 404);
-      const obj = await env.R2.get(img.r2_key);
-      if (!obj) return err('圖片不存在', 404);
-      return new Response(obj.body, { headers: { 'Content-Type': img.content_type } });
+        .first<{ r2_key: string; content_type: string; data_b64: string | null }>();
+      return serveStoredImage(env, img);
     }
     if (photoGetMatch && method === 'DELETE') {
       sheet.photos = sheet.photos.filter((p) => p.id !== photoGetMatch[1]);
@@ -1576,8 +1604,10 @@ async function handleApi(
     const oldImgs = await env.DB.prepare('SELECT id, r2_key FROM images WHERE created_at < ?')
       .bind(cutoff)
       .all<{ id: string; r2_key: string }>();
-    for (const img of oldImgs.results) {
-      await env.R2.delete(img.r2_key);
+    if (env.R2) {
+      for (const img of oldImgs.results) {
+        await env.R2.delete(img.r2_key);
+      }
     }
     await env.DB.prepare('DELETE FROM images WHERE created_at < ?').bind(cutoff).run();
     return json({ removed: oldImgs.results.length });
@@ -1628,18 +1658,12 @@ async function handleApi(
   const imgGetMatch = /^\/images\/([\w-]+)$/.exec(path);
   if (imgGetMatch && method === 'GET') {
     requireUser(user);
-    const row = await env.DB.prepare('SELECT r2_key, content_type FROM images WHERE id = ?')
+    const row = await env.DB.prepare(
+      'SELECT r2_key, content_type, data_b64 FROM images WHERE id = ?'
+    )
       .bind(imgGetMatch[1])
-      .first<{ r2_key: string; content_type: string }>();
-    if (!row) return err('找不到圖片', 404);
-    const obj = await env.R2.get(row.r2_key);
-    if (!obj) return err('圖片不存在', 404);
-    return new Response(obj.body, {
-      headers: {
-        'Content-Type': row.content_type || 'image/jpeg',
-        'Cache-Control': 'private, max-age=86400',
-      },
-    });
+      .first<{ r2_key: string; content_type: string; data_b64: string | null }>();
+    return serveStoredImage(env, row, 'private, max-age=86400');
   }
 
   return err('找不到這個 API 端點', 404);

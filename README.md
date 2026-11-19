@@ -46,6 +46,13 @@ npm run dev
 
 ---
 
+## 線上正式站點
+
+- **正式上線網址**：https://rensi-notebook.cloudflare-supabase-connection-test.workers.dev/#/dashboard
+- **免綁卡架構**：採用 Cloudflare Workers + D1（含手寫／拍照圖片儲存）+ Durable Objects WebSocket + Static Assets 全免費額度託管。
+
+---
+
 ## 部署至 Cloudflare Workers
 
 ### 1. 登入 Cloudflare
@@ -53,10 +60,9 @@ npm run dev
 npx wrangler login
 ```
 
-### 2. 建立遠端 D1 資料庫與 R2 儲存桶
+### 2. 建立遠端 D1 資料庫（免綁卡）
 ```bash
 npx wrangler d1 create rensi-db
-npx wrangler r2 bucket create rensi-media
 ```
 將 `wrangler d1 create rensi-db` 回傳的 `database_id` 填入 `wrangler.jsonc` 中的 `d1_databases[0].database_id`。
 
@@ -78,7 +84,7 @@ npm run deploy
 
 ## 透過 GitHub 連動 Cloudflare Workers 部署
 
-若想每次推送至 GitHub 後自動觸發 Cloudflare Workers Builds 部署，請先完成一次遠端 D1／R2 建立與 Migration，並將 `wrangler.jsonc` 中的 `database_id` 更新提交後，於 Cloudflare Dashboard → **Workers & Pages** → **Create** → **Import a repository** 連結此 GitHub Repo：
+若想每次推送至 GitHub 後自動觸發 Cloudflare Workers Builds 部署，請先完成一次遠端 D1 建立與 Migration，並將 `wrangler.jsonc` 中的 `database_id` 更新提交後，於 Cloudflare Dashboard → **Workers & Pages** → **Create** → **Import a repository** 連結此 GitHub Repo：
 
 - **Build command**：`npm run build`
 - **Deploy command**：`npx wrangler deploy`

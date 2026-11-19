@@ -14,14 +14,8 @@
     {
       "binding": "DB",
       "database_name": "rensi-db",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "af18ea5c-ccba-4d57-b070-40fad8031755",
       "migrations_dir": "migrations"
-    }
-  ],
-  "r2_buckets": [
-    {
-      "binding": "R2",
-      "bucket_name": "rensi-media"
     }
   ],
   "durable_objects": {
